@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.wills.carl.hotmoviesearch.Model.Movie;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button topRatedBtn, popularBtn;
     TextView displayTv;
+    Spinner orderSpinner;
 
 
     @Override
@@ -27,24 +31,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topRatedBtn = (Button) findViewById(R.id.top_rated_button);
-        popularBtn = (Button) findViewById(R.id.popular_botton);
-        displayTv = (TextView) findViewById(R.id.display_tv);
+        orderSpinner = (Spinner) findViewById(R.id.order_spinner);
 
 
-        topRatedBtn.setOnClickListener(new View.OnClickListener() {
+
+        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
+                R.array.order_choice_array, android.R.layout.simple_spinner_item);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        orderSpinner.setAdapter(spinAdapter);
+
+        orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Object selected = adapterView.getItemAtPosition(i);
                 getTopRatedMovies();
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView){
+                //Do nothing
+            }
+
         });
 
-        popularBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getPopularMovies();
-            }
-        });
 
     }
 
@@ -61,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class MovieRetrieverAsyncTask extends AsyncTask<URL, Void, String>{
+    public static class MovieRetrieverAsyncTask extends AsyncTask<URL, Void, String>{
 
         @Override
         protected String doInBackground(URL... params){
