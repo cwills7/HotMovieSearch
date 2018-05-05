@@ -8,6 +8,8 @@ package com.wills.carl.hotmoviesearch.Utils;
 import android.net.Uri;
 import android.util.Log;
 
+import com.wills.carl.hotmoviesearch.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -25,9 +27,7 @@ public class NetworkUtils {
     private final static String MOVIE_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
 
-    private final static String API_KEY =
-            //TODO: ADD API KEY HERE
-            "";
+    private final static String API_KEY = BuildConfig.ApiKey;
 
 
     private final static String API_PARAM_QUERY = "api_key";

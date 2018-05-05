@@ -1,39 +1,57 @@
 package com.wills.carl.hotmoviesearch;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.wills.carl.hotmoviesearch.Model.Movie;
 import com.wills.carl.hotmoviesearch.Utils.JsonUtils;
+import com.wills.carl.hotmoviesearch.Utils.MovieItemDecoration;
 import com.wills.carl.hotmoviesearch.Utils.NetworkUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button topRatedBtn, popularBtn;
-    TextView displayTv;
     Spinner orderSpinner;
+    RecyclerView movieListView;
+    ArrayList<Movie> movieList;
+    MovieViewAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        movieList = getPopularMovies();
+
+
+        movieListView = (RecyclerView) findViewById(R.id.movie_grid_list);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        layoutManager.canScrollVertically();
+        movieListView.addItemDecoration(new MovieItemDecoration(getResources().getDimensionPixelSize(R.dimen.grid_spacing)));
+        movieListView.setLayoutManager(layoutManager);
+        adapter = new MovieViewAdapter(this, movieList);
+        movieListView.setAdapter(adapter);
 
         orderSpinner = (Spinner) findViewById(R.id.order_spinner);
-
-
 
         ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
                 R.array.order_choice_array, android.R.layout.simple_spinner_item);
@@ -44,7 +62,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Object selected = adapterView.getItemAtPosition(i);
-                getTopRatedMovies();
+                if("Most Popular".equalsIgnoreCase((String) selected)){
+                    movieList = getPopularMovies();
+                }
+                if("Top Rated".equalsIgnoreCase((String) selected)){
+                    getTopRatedMovies();
+                    movieList = getTopRatedMovies();
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -55,18 +80,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+
+
     }
 
 
 
-    private void getTopRatedMovies(){
+    private ArrayList<Movie> getTopRatedMovies(){
         URL topRatedMoviesUrl = NetworkUtils.buildTopRatedUrl();
-        new MovieRetrieverAsyncTask().execute(topRatedMoviesUrl);
+        ArrayList<Movie> mList = new ArrayList<>();
+        try {
+            String results = new MovieRetrieverAsyncTask().execute(topRatedMoviesUrl).get();
+            mList = (ArrayList<Movie>) JsonUtils.parseMovies(results);
+        } catch (ExecutionException | InterruptedException e){
+            Log.d("ERROR", e.getMessage());
+        }
+        return mList;
     }
 
-    private void getPopularMovies(){
+    private ArrayList<Movie> getPopularMovies(){
         URL popularMoviesUrl = NetworkUtils.buildPopularUrl();
-        new MovieRetrieverAsyncTask().execute(popularMoviesUrl);
+        ArrayList<Movie> mList = new ArrayList<>();
+        try {
+            String results = new MovieRetrieverAsyncTask().execute(popularMoviesUrl).get();
+            mList = (ArrayList<Movie>) JsonUtils.parseMovies(results);
+        } catch (ExecutionException | InterruptedException e){
+            Log.d("ERROR", e.getMessage());
+        }
+        return mList;
     }
 
 
@@ -91,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 for(Movie m: movies){
                     Log.i(m.getTitle().toUpperCase() , m.toLog());
                 }
-
-
                 //TODO: populate all of the stuff
             }
         }
