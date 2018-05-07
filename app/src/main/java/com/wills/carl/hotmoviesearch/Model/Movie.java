@@ -1,10 +1,12 @@
 package com.wills.carl.hotmoviesearch.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Carl on 5/2/2018.
  */
 
-public class Movie {
+public class Movie implements Serializable{
 
     private int voteCount;
     private int id;
@@ -24,7 +26,7 @@ public class Movie {
 
     public Movie(int voteCount, int id, boolean video, double voteAgerage, String title, double popularity,
                  String posterPath, String origLanguage, String origTitle, int[] genreIds, String backdropPath,
-                 boolean adult, String overview, String releaseDate){
+                 boolean adult, String overview, String releaseDate) {
         this.voteCount = voteCount;
         this.id= id;
         this.video = video;
