@@ -74,14 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-                //Do nothing
+                //Do nothing yet
             }
 
         });
-
-
-
-
 
     }
 
