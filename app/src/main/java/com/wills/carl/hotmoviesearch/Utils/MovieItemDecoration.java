@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 public class MovieItemDecoration extends RecyclerView.ItemDecoration {
-    private int spacing;
+    private final int spacing;
 
     public MovieItemDecoration (int spacing){
         this.spacing = spacing;

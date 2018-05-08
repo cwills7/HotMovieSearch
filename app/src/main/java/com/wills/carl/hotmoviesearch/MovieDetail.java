@@ -11,8 +11,11 @@ import com.wills.carl.hotmoviesearch.Model.Movie;
 
 public class MovieDetail extends AppCompatActivity {
 
-    ImageView thumbnail;
-    TextView title;
+    private ImageView thumbnail;
+    private TextView title;
+    private TextView rating;
+    private TextView releaseDate;
+    private TextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -22,8 +25,13 @@ public class MovieDetail extends AppCompatActivity {
         Intent i = getIntent();
         Movie m = (Movie) i.getSerializableExtra("movie");
 
-        thumbnail = (ImageView) findViewById(R.id.detail_thumbnail);
-        title = (TextView) findViewById(R.id.detail_title);
+        thumbnail = findViewById(R.id.detail_thumbnail);
+        title = findViewById(R.id.detail_title);
+        rating = findViewById(R.id.detail_vote);
+        releaseDate = findViewById(R.id.detail_release_date);
+        description = findViewById(R.id.detail_description);
+
+        thumbnail.setContentDescription(m.getTitle() + " poster image.");
 
         Picasso.with(this)
                 .load("http://image.tmdb.org/t/p/w500/" + m.getPosterPath())
@@ -33,6 +41,9 @@ public class MovieDetail extends AppCompatActivity {
                 .into(thumbnail);
 
         title.setText(m.getTitle());
+        rating.setText(Double.toString(m.getVoteAverage()));
+        releaseDate.setText(m.getReleaseDate());
+        description.setText(m.getOverview());
 
     }
 }

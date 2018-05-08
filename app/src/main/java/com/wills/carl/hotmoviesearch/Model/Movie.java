@@ -24,13 +24,13 @@ public class Movie implements Serializable{
     private String releaseDate;
 
 
-    public Movie(int voteCount, int id, boolean video, double voteAgerage, String title, double popularity,
+    public Movie(int voteCount, int id, boolean video, double voteAverage, String title, double popularity,
                  String posterPath, String origLanguage, String origTitle, int[] genreIds, String backdropPath,
                  boolean adult, String overview, String releaseDate) {
         this.voteCount = voteCount;
         this.id= id;
         this.video = video;
-        this.voteAverage = voteAgerage;
+        this.voteAverage = voteAverage;
         this.title = title;
         this.popularity = popularity;
         this.posterPath = posterPath;
@@ -156,14 +156,7 @@ public class Movie implements Serializable{
         this.releaseDate = releaseDate;
     }
 
-    public String toLog(){
-        StringBuilder str = new StringBuilder();
-        str.append("VoteCount : ");
-        str.append(this.getTitle());
-        str.append("\n");
 
-        return str.toString();
-    }
 
 
 }

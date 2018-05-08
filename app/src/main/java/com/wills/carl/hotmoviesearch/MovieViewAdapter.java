@@ -8,41 +8,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.wills.carl.hotmoviesearch.Model.Movie;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.ViewHolder>{
 
     private ArrayList<Movie> movieList;
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public ImageView thumbnail;
-        public ViewHolder(final View v){
+        private final ImageView thumbnail;
+        private ViewHolder(final View v){
             super(v);
             thumbnail = v.findViewById(R.id.list_movie_icon);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Movie m = movieList.get(getAdapterPosition());
-                    Toast.makeText(view.getContext(), "Kicked Off Detail Intent for " + m.getTitle() , Toast.LENGTH_SHORT).show();
-
-                      Intent i = new Intent(view.getContext(), MovieDetail.class);
+                    Intent i = new Intent(view.getContext(), MovieDetail.class);
                     i.putExtra("movie", movieList.get(getAdapterPosition()));
                     view.getContext().startActivity(i);
-
-
                 }
             });
-
         }
     }
 
@@ -55,19 +45,14 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.View
     @Override
     public MovieViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int type){
         View v = inflater.inflate(R.layout.movie_item, parent, false);
-        ViewHolder holder = new ViewHolder(v);
-        return holder;
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int pos){
         //setImage
         Movie m = movieList.get(pos);
-
-        ///////DEBUG PURPOSES ONLY TODO: Remove before submitting
-        Picasso.with(holder.thumbnail.getContext())
-                .setIndicatorsEnabled(true);
-
+        holder.thumbnail.setContentDescription(m.getTitle());
 
         Picasso.with(holder.thumbnail.getContext())
                 .load("http://image.tmdb.org/t/p/w500/" + m.getPosterPath())

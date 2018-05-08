@@ -3,4 +3,9 @@
     <dimen name="movie_poster_width">72dp</dimen>
     <dimen name="movie_poster_height">300</dimen>
     <dimen name="grid_spacing">16dp</dimen>
+    <dimen name="standard_detail_title">48sp</dimen>
+    <dimen name="standard_detail_text">24sp</dimen>
+    <dimen name="standard_margin">8dp</dimen>
+    <dimen name="double_margin">16dp</dimen>
+    <dimen name="detail_left_bound_buffer">200dp</dimen>
 </resources>
