@@ -11,7 +11,7 @@
         android:id="@+id/order_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="@dimen/double_margin"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -19,7 +19,7 @@
         android:id="@+id/movie_grid_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:padding="@dimen/double_margin"
         android:layout_below="@id/order_spinner" />
 
 </RelativeLayout>

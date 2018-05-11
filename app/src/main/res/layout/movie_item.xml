@@ -8,7 +8,6 @@
         android:id="@+id/list_movie_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        />
+        android:adjustViewBounds="true" />
 
 </LinearLayout>
