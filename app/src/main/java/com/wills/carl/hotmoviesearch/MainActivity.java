@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             URL queryUrl = params[0];
             String results = null;
             try{
-                results = NetworkUtils.getResponseFromHttpUrl(queryUrl);
+                results = NetworkUtils.getHttpResponse(queryUrl);
             } catch(IOException e){
                 e.printStackTrace();
             }

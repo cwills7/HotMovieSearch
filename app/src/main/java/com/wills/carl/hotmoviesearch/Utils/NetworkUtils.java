@@ -79,10 +79,10 @@ public class NetworkUtils {
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading
      */
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+    public static String getHttpResponse(URL url) throws IOException {
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
         try {
-            InputStream in = urlConnection.getInputStream();
+            InputStream in = con.getInputStream();
 
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
@@ -94,11 +94,10 @@ public class NetworkUtils {
                 return null;
             }
         } catch (Exception e){
-            Log.d("ERROR", e.getMessage());
             return null;
 
         } finally{
-            urlConnection.disconnect();
+            con.disconnect();
         }
     }
 }
