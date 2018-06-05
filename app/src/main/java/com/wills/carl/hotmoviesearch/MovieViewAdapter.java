@@ -65,6 +65,12 @@ public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.View
 
     }
 
+    public void reset(ArrayList<Movie> movies){
+        movieList.clear();
+        movieList = movies;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount(){
         return movieList.size();

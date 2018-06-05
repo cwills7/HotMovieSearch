@@ -24,16 +24,17 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner orderSpinner;
-    private RecyclerView movieListView;
-    private ArrayList<Movie> movieList;
-    private MovieViewAdapter adapter;
+    public static RecyclerView movieListView;
+    public static ArrayList<Movie> movieList;
+    public static MovieViewAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        movieList = getPopularMovies();
+        movieList = new ArrayList<>();
+        getPopularMovies();
 
 
         movieListView = findViewById(R.id.movie_grid_list);
@@ -57,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Object selected = adapterView.getItemAtPosition(i);
                 if("Most Popular".equalsIgnoreCase((String) selected)){
-                    movieList = getPopularMovies();
+                    getPopularMovies();
                 }
                 if("Top Rated".equalsIgnoreCase((String) selected)){
                     //getTopRatedMovies();
-                    movieList = getTopRatedMovies();
+                    getTopRatedMovies();
+                   // adapter.notifyDataSetChanged();
                 }
             }
 
@@ -76,32 +78,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private ArrayList<Movie> getTopRatedMovies(){
+    private void getTopRatedMovies(){
         URL topRatedMoviesUrl = NetworkUtils.buildTopRatedUrl();
-        ArrayList<Movie> mList = new ArrayList<>();
         try {
-            String results = new MovieRetrieverAsyncTask().execute(topRatedMoviesUrl).get();
-            mList = (ArrayList<Movie>) JsonUtils.parseMovies(results);
-            adapter = new MovieViewAdapter(this, mList);
-            movieListView.setAdapter(adapter);
-        } catch (ExecutionException | InterruptedException | NullPointerException e){
+             new MovieRetrieverAsyncTask().execute(topRatedMoviesUrl);
+        } catch (NullPointerException e){
             Log.d("ERROR", e.getMessage());
         }
-        return mList;
     }
 
-    private ArrayList<Movie> getPopularMovies(){
+    private void getPopularMovies(){
         URL popularMoviesUrl = NetworkUtils.buildPopularUrl();
-        ArrayList<Movie> mList = new ArrayList<>();
         try {
-            String results = new MovieRetrieverAsyncTask().execute(popularMoviesUrl).get();
-            mList = (ArrayList<Movie>) JsonUtils.parseMovies(results);
-            adapter = new MovieViewAdapter(this, mList);
-            movieListView.setAdapter(adapter);
-        } catch (ExecutionException | InterruptedException |NullPointerException e){
+            new MovieRetrieverAsyncTask().execute(popularMoviesUrl);
+        } catch (NullPointerException e){
             Log.d("ERROR", e.getMessage());
         }
-        return mList;
     }
 
 
@@ -121,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String queryResults){
+            movieList = (ArrayList<Movie>) JsonUtils.parseMovies(queryResults);
+            adapter.reset(movieList);
             //Do Nothing. We get the data in the methods above
         }
     }
