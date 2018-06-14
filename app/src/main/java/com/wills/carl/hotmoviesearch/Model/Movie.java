@@ -1,6 +1,7 @@
 package com.wills.carl.hotmoviesearch.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Carl on 5/2/2018.
@@ -22,6 +23,8 @@ public class Movie implements Serializable{
     private boolean adult;
     private String overview;
     private String releaseDate;
+    private ArrayList<Video> videoList;
+    private ArrayList<Review> reviewList;
 
 
     public Movie(int voteCount, int id, boolean video, double voteAverage, String title, double popularity,
@@ -41,6 +44,8 @@ public class Movie implements Serializable{
         this.adult = adult;
         this.overview = overview;
         this.releaseDate = releaseDate;
+        videoList= new ArrayList<>();
+        reviewList = new ArrayList<>();
     }
 
 
@@ -156,7 +161,16 @@ public class Movie implements Serializable{
         this.releaseDate = releaseDate;
     }
 
-
-
-
+    public ArrayList<Video> getVideoList() {
+        return videoList;
+    }
+    public void setVideoList(ArrayList<Video> videoList){
+        this.videoList = videoList;
+    }
+    public ArrayList<Review> getReviewList() {
+        return reviewList;
+    }
+    public void setReviewList(ArrayList<Review> reviewList){
+        this.reviewList = reviewList;
+    }
 }

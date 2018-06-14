@@ -49,6 +49,14 @@ public class NetworkUtils {
         return buildUrl("top_rated");
     }
 
+    public static URL buildVideoUrl(String id){
+        return buildUrl(id + "/videos");
+    }
+
+    public static URL buildReviewUrl(String id) {
+        return buildUrl(id + "/reviews");
+    }
+
     /**
      * Builds the URL used to query GitHub.
      *
