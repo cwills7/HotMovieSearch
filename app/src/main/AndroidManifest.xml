@@ -17,6 +17,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieDetail" />
+
+        <provider
+            android:authorities="com.wills.carl.hotmoviesearch"
+            android:name="com.wills.carl.hotmoviesearch.Data.MovieProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

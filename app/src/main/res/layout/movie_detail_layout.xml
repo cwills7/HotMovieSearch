@@ -84,6 +84,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_release_date" />
 
+
+        <Button
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/detail_left_bound_buffer"
+            android:layout_marginStart="@dimen/detail_left_bound_buffer"
+            android:layout_marginTop="28dp"
+            android:text="@string/favorite_prompt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_vote"/>
+
         <TextView
             android:id="@+id/detail_description"
             android:layout_width="0dp"

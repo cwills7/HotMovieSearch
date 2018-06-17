@@ -30,24 +30,16 @@ public class JsonUtils {
             for (int i = 0; i < 20; i++){
                 //Get the first 20 movies
                 JSONObject thisMovie = movies.getJSONObject(i);
-                int voteCount = thisMovie.getInt("vote_count");
                 int id = thisMovie.getInt("id");
-                boolean video = thisMovie.getBoolean("video");
                 double voteAverage = thisMovie.getDouble("vote_average");
                 String title = thisMovie.getString("title");
                 double popularity = thisMovie.getDouble("popularity");
                 String posterPath = thisMovie.getString("poster_path");
-                String origLanguage = thisMovie.getString("original_language");
-                String origTitle = thisMovie.getString("original_title");
-                int[] genreIds = extractIntArray(thisMovie.getJSONArray("genre_ids"));
-                String backdropPath = thisMovie.getString("backdrop_path");
-                boolean adult = thisMovie.getBoolean("adult");
                 String overview = thisMovie.getString("overview");
                 String releaseDate = thisMovie.getString("release_date");
 
                 //Add movies to a list
-                parsedMovies.add(new Movie(voteCount, id, video, voteAverage, title, popularity, posterPath,
-                        origLanguage, origTitle, genreIds, backdropPath, adult, overview, releaseDate));
+                parsedMovies.add(new Movie(id, voteAverage, title, popularity, posterPath, overview, releaseDate));
             }
 
 

@@ -3,4 +3,5 @@
     <string name="average_vote_title">Average Vote: </string>
     <string name="release_date_title">Release Date: </string>
     <string name="trailer_title">Trailers: </string>
+    <string name="favorite_prompt">Mark As \nFavorite</string>
 </resources>

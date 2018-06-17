@@ -1,16 +1,22 @@
 package com.wills.carl.hotmoviesearch;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.wills.carl.hotmoviesearch.Data.MovieContract;
+import com.wills.carl.hotmoviesearch.Data.MovieDbHelper;
 import com.wills.carl.hotmoviesearch.Model.Movie;
 import com.wills.carl.hotmoviesearch.Model.Review;
 import com.wills.carl.hotmoviesearch.Model.Video;
@@ -33,14 +39,19 @@ public class MovieDetail extends AppCompatActivity {
     private RecyclerView videoRv;
     private static Movie m;
     private static VideoViewAdapter videoViewAdapter;
+    private Button favoriteButton;
     static ArrayList<Video> videoList;
-
+    private SQLiteDatabase mDb;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail_layout);
+
+        MovieDbHelper dbHelper = new MovieDbHelper(this);
+        mDb = dbHelper.getWritableDatabase();
+
         videoList = new ArrayList<Video>();
         Intent i = getIntent();
         m = (Movie) i.getSerializableExtra("movie");
@@ -70,6 +81,37 @@ public class MovieDetail extends AppCompatActivity {
         videoRv.setLayoutManager(llm);
         videoViewAdapter = new VideoViewAdapter(this, m.getVideoList());
         videoRv.setAdapter(videoViewAdapter);
+
+        favoriteButton = (Button) findViewById(R.id.favorite_button);
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //TODO: Check to see if it's in the favorites already!
+                
+                if ("Mark As \nFavorite".equalsIgnoreCase(favoriteButton.getText().toString())) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(MovieContract.MovieEntry.COLUMN_ID, m.getId());
+                    cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, m.getOverview());
+                    cv.put(MovieContract.MovieEntry.COLUMN_TITLE, m.getTitle());
+                    cv.put(MovieContract.MovieEntry.COLUMN_POPULARITY, m.getPopularity());
+                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, m.getPosterPath());
+                    cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, m.getReleaseDate());
+                    cv.put(MovieContract.MovieEntry.COLUMN_VOTE_AVG, m.getVoteAverage());
+                    getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
+
+                    favoriteButton.setText("Favorite");
+                }
+                else if ("Favorite".equalsIgnoreCase(favoriteButton.getText().toString())){
+                    getContentResolver().delete(MovieContract.MovieEntry.buildMovieUriWithId(m.getId()),
+                            null,
+                            null);
+                    favoriteButton.setText("Mark As \nFavorite");
+
+                }
+
+            }
+        });
 
     }
 

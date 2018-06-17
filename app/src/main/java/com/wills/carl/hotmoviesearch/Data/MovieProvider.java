@@ -113,6 +113,17 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
+
+            case CODE_MOVIE_WITH_ID: {
+                String normalizedId = uri.getLastPathSegment();
+                String[] selArgs = new String[]{normalizedId};
+
+                numDeleted = mDbHelper.getWritableDatabase().delete(
+                        MovieContract.MovieEntry.TABLE_NAME,
+                        "id = ?",
+                        selArgs);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown Uri: " + uri);
         }

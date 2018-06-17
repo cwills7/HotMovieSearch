@@ -7,11 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movie.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MovieDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
@@ -22,7 +23,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                         MovieContract.MovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
                         MovieContract.MovieEntry.COLUMN_RELEASE_DATE + " INTEGER NOT NULL, " +
                         MovieContract.MovieEntry.COLUMN_VOTE_AVG + " INTEGER NOT NULL, " +
-                        MovieContract.MovieEntry.COLUMN_VIDEO + " NUMERIC NOT NULL, " +
                         MovieContract.MovieEntry.COLUMN_POPULARITY + " INTEGER NOT NULL, " +
                         MovieContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL);";
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);

@@ -20,7 +20,6 @@ public class MovieContract {
 
         //Column descriptors
         public static final String COLUMN_ID = "id";
-        public static final String COLUMN_VIDEO = "video";
         public static final String COLUMN_VOTE_AVG = "avg_vote";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_POPULARITY = "popularity";
