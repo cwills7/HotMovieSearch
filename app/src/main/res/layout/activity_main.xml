@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wills.carl.hotmoviesearch.MainActivity"
-    android:background="@color/colorSecondaryDark">
+    android:background="@color/colorPrimaryDark">
 
     <Spinner
         android:id="@+id/order_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/double_margin"
+        android:popupBackground="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent" />
 
 

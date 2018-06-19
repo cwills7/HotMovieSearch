@@ -41,7 +41,6 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.View
            @Override
            public void onClick(View view) {
                startYoutubeIntent(view.getContext(), v.getId(), v.getKey());
-               Toast.makeText(view.getContext(), "CLICKED PLAY ON " + videoList.get(position).getName(), Toast.LENGTH_SHORT).show();
            }
        });
        holder.videoTitle.setText(videoList.get(position).getName());

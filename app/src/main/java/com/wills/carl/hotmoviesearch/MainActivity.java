@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         orderSpinner = findViewById(R.id.order_spinner);
 
         ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
-                R.array.order_choice_array, android.R.layout.simple_spinner_item);
+                R.array.order_choice_array, R.layout.spinner_item);
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         orderSpinner.setAdapter(spinAdapter);
 
@@ -83,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //May have unfavorited a movie, so when we return, we should re-create our favorites
+        String selected = orderSpinner.getSelectedItem().toString();
+        if("Favorites".equalsIgnoreCase((String) selected)){
+            getFavorites();
+        }
     }
 
     private void getFavorites(){

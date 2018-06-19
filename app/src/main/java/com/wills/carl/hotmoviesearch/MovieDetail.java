@@ -2,6 +2,7 @@ package com.wills.carl.hotmoviesearch;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wills.carl.hotmoviesearch.Data.MovieContract;
 import com.wills.carl.hotmoviesearch.Data.MovieDbHelper;
+import com.wills.carl.hotmoviesearch.Data.MovieProvider;
 import com.wills.carl.hotmoviesearch.Model.Movie;
 import com.wills.carl.hotmoviesearch.Model.Review;
 import com.wills.carl.hotmoviesearch.Model.Video;
@@ -49,8 +51,10 @@ public class MovieDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail_layout);
 
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        mDb = dbHelper.getWritableDatabase();
+        final MovieDbHelper dbHelper = new MovieDbHelper(this);
+        mDb = dbHelper.getReadableDatabase();
+
+
 
         videoList = new ArrayList<Video>();
         Intent i = getIntent();
@@ -82,14 +86,25 @@ public class MovieDetail extends AppCompatActivity {
         videoViewAdapter = new VideoViewAdapter(this, m.getVideoList());
         videoRv.setAdapter(videoViewAdapter);
 
+         boolean favorite = isFavorite(m.getId());
         favoriteButton = (Button) findViewById(R.id.favorite_button);
+        if (!favorite) {
+            favoriteButton.setText("Mark As \nFavorite");
+            favoriteButton.setBackgroundColor(getResources().getColor(R.color.colorSecondaryLight));
+            favoriteButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            favoriteButton.setText("Favorite");
+            favoriteButton.setBackgroundColor(getResources().getColor(R.color.colorSecondaryDark));
+        }
+
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean favorite = isFavorite(m.getId());
+                if (!favorite) {
 
-                //TODO: Check to see if it's in the favorites already!
-                
-                if ("Mark As \nFavorite".equalsIgnoreCase(favoriteButton.getText().toString())) {
+
+
                     ContentValues cv = new ContentValues();
                     cv.put(MovieContract.MovieEntry.COLUMN_ID, m.getId());
                     cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, m.getOverview());
@@ -101,12 +116,15 @@ public class MovieDetail extends AppCompatActivity {
                     getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
 
                     favoriteButton.setText("Favorite");
+                    favoriteButton.setBackgroundColor(getResources().getColor(R.color.colorSecondaryDark));
                 }
-                else if ("Favorite".equalsIgnoreCase(favoriteButton.getText().toString())){
+                else {
                     getContentResolver().delete(MovieContract.MovieEntry.buildMovieUriWithId(m.getId()),
                             null,
                             null);
                     favoriteButton.setText("Mark As \nFavorite");
+                    favoriteButton.setBackgroundColor(getResources().getColor(R.color.colorSecondaryLight));
+                    favoriteButton.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                 }
 
@@ -125,6 +143,22 @@ public class MovieDetail extends AppCompatActivity {
 
         } catch (NullPointerException e){
             Log.d("ERROR", e.getMessage());
+        }
+    }
+
+    private boolean isFavorite(int id){
+        Cursor cur = getContentResolver().query(MovieContract.MovieEntry.buildMovieUriWithId(id),
+                null,
+                null,
+                null,
+                null);
+
+        if (cur.getCount() > 0){
+            cur.close();
+            return true;
+        } else{
+            cur.close();
+            return false;
         }
     }
 
