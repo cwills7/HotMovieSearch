@@ -111,30 +111,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_thumbnail" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/content_botton_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/trailer_title"
-            android:textSize="@dimen/standard_detail_title"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:id="@+id/trailer_title"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginLeft="@dimen/double_margin"
-            android:layout_marginStart="@dimen/double_margin"
-            app:layout_constraintTop_toBottomOf="@id/detail_description"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:orientation="horizontal"
+            android:backgroundTint="@color/colorPrimary"
+            android:padding="@dimen/standard_margin"
+            android:paddingTop="@dimen/double_margin"
+            app:layout_constraintTop_toBottomOf="@id/detail_description">
 
+            <Button
+                android:id="@+id/trailer_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:text="@string/trailer_title"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textSize="@dimen/standard_detail_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_description" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorSecondaryLight"/>
+
+            <Button
+                android:id="@+id/review_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:text="@string/review_title"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textSize="@dimen/standard_detail_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_description"/>
+
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/video_list"
+            android:id="@+id/content_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/double_margin"
-            android:layout_marginStart="@dimen/double_margin"
-            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginTop="@dimen/standard_margin"
             android:padding="@dimen/standard_margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trailer_title" />
+            app:layout_constraintTop_toBottomOf="@id/content_botton_view" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -18,14 +18,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wills.carl.hotmoviesearch.Data.MovieContract;
 import com.wills.carl.hotmoviesearch.Data.MovieDbHelper;
-import com.wills.carl.hotmoviesearch.Data.MovieProvider;
 import com.wills.carl.hotmoviesearch.Model.Movie;
 import com.wills.carl.hotmoviesearch.Model.Review;
 import com.wills.carl.hotmoviesearch.Model.Video;
 import com.wills.carl.hotmoviesearch.Utils.JsonUtils;
 import com.wills.carl.hotmoviesearch.Utils.NetworkUtils;
-
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,12 +35,17 @@ public class MovieDetail extends AppCompatActivity {
     private TextView rating;
     private TextView releaseDate;
     private TextView description;
-    private RecyclerView videoRv;
+    private RecyclerView contentRv;
+    private Button trailerButton;
+    private Button reviewButton;
     private static Movie m;
     private static VideoViewAdapter videoViewAdapter;
+    private static ReviewViewAdapter reviewAdapter;
     private Button favoriteButton;
-    static ArrayList<Video> videoList;
+    static ArrayList<Video> trailerList;
+    static ArrayList<Review> reviewList;
     private SQLiteDatabase mDb;
+    private boolean t;
 
 
     @Override
@@ -54,9 +56,8 @@ public class MovieDetail extends AppCompatActivity {
         final MovieDbHelper dbHelper = new MovieDbHelper(this);
         mDb = dbHelper.getReadableDatabase();
 
-
-
-        videoList = new ArrayList<Video>();
+        trailerList = new ArrayList<Video>();
+        reviewList = new ArrayList<>();
         Intent i = getIntent();
         m = (Movie) i.getSerializableExtra("movie");
         getExtraMovieInfo(Integer.toString(m.getId()));
@@ -65,8 +66,9 @@ public class MovieDetail extends AppCompatActivity {
         rating = findViewById(R.id.detail_vote);
         releaseDate = findViewById(R.id.detail_release_date);
         description = findViewById(R.id.detail_description);
-        videoRv = findViewById(R.id.video_list);
-
+        contentRv = findViewById(R.id.content_rv);
+        trailerButton = findViewById(R.id.trailer_bt);
+        reviewButton = findViewById(R.id.review_bt);
         thumbnail.setContentDescription(m.getTitle() + " poster image.");
 
         Picasso.with(this)
@@ -76,15 +78,19 @@ public class MovieDetail extends AppCompatActivity {
                 .onlyScaleDown()
                 .into(thumbnail);
 
+        trailerButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        reviewButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
         title.setText(m.getTitle());
         rating.setText(Double.toString(m.getVoteAverage()));
         releaseDate.setText(m.getReleaseDate());
         description.setText(m.getOverview());
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        videoRv.setLayoutManager(llm);
+        contentRv.setLayoutManager(llm);
         videoViewAdapter = new VideoViewAdapter(this, m.getVideoList());
-        videoRv.setAdapter(videoViewAdapter);
+        reviewAdapter = new ReviewViewAdapter(this, m.getReviewList());
+        contentRv.setAdapter(videoViewAdapter);
 
          boolean favorite = isFavorite(m.getId());
         favoriteButton = (Button) findViewById(R.id.favorite_button);
@@ -102,9 +108,6 @@ public class MovieDetail extends AppCompatActivity {
             public void onClick(View view) {
                 boolean favorite = isFavorite(m.getId());
                 if (!favorite) {
-
-
-
                     ContentValues cv = new ContentValues();
                     cv.put(MovieContract.MovieEntry.COLUMN_ID, m.getId());
                     cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, m.getOverview());
@@ -130,7 +133,28 @@ public class MovieDetail extends AppCompatActivity {
 
             }
         });
-
+        //default is to show trailers first.
+        t = true;
+        trailerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (t) return;
+                contentRv.setAdapter(videoViewAdapter);
+                t = true;
+                trailerButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                reviewButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+        });
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!t) return;
+                contentRv.setAdapter(reviewAdapter);
+                t = false;
+                reviewButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                trailerButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+        });
     }
 
 
@@ -179,9 +203,9 @@ public class MovieDetail extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String queryResults){
-            videoList = JsonUtils.parseVideos(queryResults);
-            videoViewAdapter.reset(videoList);
-            m.setVideoList(videoList);
+            trailerList = JsonUtils.parseVideos(queryResults);
+            videoViewAdapter.reset(trailerList);
+            m.setVideoList(trailerList);
         }
     }
 
@@ -201,7 +225,8 @@ public class MovieDetail extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String queryResults){
-            ArrayList<Review> reviewArrayList = JsonUtils.parseReviews(queryResults);
+            reviewList = JsonUtils.parseReviews(queryResults);
+            reviewAdapter.reset(reviewList);
             m.setReviewList(JsonUtils.parseReviews(queryResults));
 
         }
